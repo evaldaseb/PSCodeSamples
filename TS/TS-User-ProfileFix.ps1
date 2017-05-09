@@ -270,7 +270,7 @@ function Remove-HPRegKeys {
 
 # ***** ENTRY POINT ***********
 $Users = Get-Content $PSScriptRoot\Users.txt
-$Account = 'svc_sccm'
+$Account = 'SomeAdminAccount'
 $VerbosePreference  = [System.Management.Automation.ActionPreference]::Continue
 $PathProfile      = "SomeNetworkShare\$CommunityUser\Profile"
 
