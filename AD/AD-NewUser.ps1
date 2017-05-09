@@ -1,9 +1,9 @@
 <#	
 	.NOTES
 	===========================================================================
-	 Created on:   	10/04/2014
+	 Created on:   	10/04/2016
 	 Created by:   	Evaldas Baltrunas
-	 Organization: 	GSTT
+	 Organization: 	
 	 Filename:     	Starters.ps1
 	===========================================================================
 	.DESCRIPTION
@@ -150,11 +150,11 @@ function New-GSTTADAccount
                             $i = $i - 1 
                         }
                         until ($i -lt 0)
-                        $oun = $oun + 'OU=GSTT,DC=gstt,DC=local'
+                        $oun = $oun + 'OU=OUName,DC=SomeDomainName,DC=com'
                     }
                     else 
                     {
-                        $oun = 'OU=NewStarters,OU=Non Directorate,OU=GSTT,DC=gstt,DC=local'    
+                        $oun = 'OU=AnotherOUName,OU=OUName,DC=SomeDomainName,DC=com'    
                     }
                     # end formatting OU
 
@@ -188,7 +188,7 @@ function New-GSTTADAccount
                                                 Name            = $LastName + ' ' + $FirstName
                                                 ParentContainer = $oun
                                                 SamAccountName  = $SamAccountName
-												                        UserPassword    = 'NewPassword1'
+						UserPassword    = '**************'
 	                  } # end NewUserParams
                     Write-Verbose "Account will be created in $oun"
 					          #TODO: Add what happens if person assigned to a non-standard OU
@@ -198,7 +198,7 @@ function New-GSTTADAccount
 						          $exchPolicy = 'edsva-MsExch-ApplyEmailAddressPolicy'
                       $sbNewUser = {
                         New-QADUser @NewUserParams -ObjectAttributes `
-                        @{edsaCreateMSExchMailbox='true';mailNickname="$starter.FirstName"+'.'+"$starter.Lastname";homeMDB='CN=DB016, CN=Databases, CN=Exchange Administrative Group (FYDIBOHF23SPDLT), CN=Administrative Groups, CN=Guys St Thomas Hospital Trust, CN=Microsoft Exchange, CN=Services, CN=Configuration, DC=gstt, DC=local';$exchPolicy='TRUE';info = "$file"} -ErrorAction Stop -verbose:$false
+                        @{edsaCreateMSExchMailbox='true';mailNickname="$starter.FirstName"+'.'+"$starter.Lastname";homeMDB='CN=****, CN=Databases, CN=Exchange Administrative Group (FYDIBOHF23SPDLT), CN=Administrative Groups, CN=********, CN=Microsoft Exchange, CN=Services, CN=Configuration, DC=SomeDomainName, DC=com';$exchPolicy='TRUE';info = "$file"} -ErrorAction Stop -verbose:$false
 						          } # end $sbNewUser
 					          }
 					
@@ -225,7 +225,7 @@ function New-GSTTADAccount
 						
 						          Write-Verbose 'Setting additional parameters'
 						          Add-Content $MainLogFile 'Setting additional parameters'
-						          Set-QADUser -Identity $User.LogonName -UserMustChangePassword $true -UserPrincipalName "$($User.LogonName)@gstt.local" `
+						          Set-QADUser -Identity $User.LogonName -UserMustChangePassword $true -UserPrincipalName "$($User.LogonName)@SomeDomainName.com" `
 									          -ObjectAttributes @{
 							                employeeID = "$($starter.PersonID)"; `
 							                extensionAttribute10 = $Starter.CostCentre; `
@@ -239,27 +239,27 @@ function New-GSTTADAccount
 						          # if IsEmployee, IsHRSS, IsManager or IsElevated = 1
 						          if ($starter.IsEmployee -eq 1)
 						          {
-							          Add-QADGroupMembership -User $User.LogonName -ADGroup 'HRPortal - Employee'
-							          Write-Verbose 'Added to HRPortal - Employee'
-							          Add-Content $MainLogFile 'Added to HRPortal - Employee'
+							          Add-QADGroupMembership -User $User.LogonName -ADGroup 'ADGroupName1'
+							          Write-Verbose 'Added to ADGroupName1'
+							          Add-Content $MainLogFile 'Added to ADGroupName1'
 						          }
 						          if ($starter.IsHRSS -eq 1)
 						          {
-							          Add-QADGroupMembership -User $User.LogonName -ADGroup 'HRPortal - Support Services'
-							          Write-Verbose 'Added to HRPortal - Support Services'
-							          Add-Content $MainLogFile 'Added to HRPortal - Support Services'
+							          Add-QADGroupMembership -User $User.LogonName -ADGroup 'ADGroupName2'
+							          Write-Verbose 'Added to ADGroupName2'
+							          Add-Content $MainLogFile 'Added to ADGroupName2'
 						          }
 						          if ($starter.IsManager -eq 1)
 						          {
-							          Add-QADGroupMembership -User $User.LogonName -ADGroup 'HRPortal - Line Manager'
-							          Write-Verbose 'Added to HRPortal - Line Manager'
-							          Add-Content $MainLogFile 'Added to HRPortal - Line Manager'
+							          Add-QADGroupMembership -User $User.LogonName -ADGroup 'ADGroupName3'
+							          Write-Verbose 'Added to ADGroupName3'
+							          Add-Content $MainLogFile 'Added to ADGroupName3'
 						          }
 						          if ($starter.IsElevated -eq 1)
 						          {
-							          Add-QADGroupMembership -User $User.LogonName -ADGroup 'HRPortal - Elevated User'
-							          Write-Verbose 'Added to HRPortal - Elevated User'
-							          Add-Content $MainLogFile 'Added to HRPortal - Elevated User'
+							          Add-QADGroupMembership -User $User.LogonName -ADGroup 'ADGroupName4'
+							          Write-Verbose 'Added to ADGroupName4'
+							          Add-Content $MainLogFile 'Added to ADGroupName4'
 						          }
 						          #TODO: Add account validation function
 						
@@ -296,7 +296,7 @@ function New-GSTTADAccount
       if (test-path "$MainPath\$StartersLogsPath\NewAccounts\New_Accounts_$file")
 		  {
 			  #TODO: Email formatting
-			  Send-MailMessage -to 'gstt@service-now.com' -from 'UserProvisioning@hr.nhs.uk' -Body 'New accounts created, see attachment' -Subject "New accounts $file" -SmtpServer 'relay.gstt.nhs.uk' -Attachments "$MainPath\$StartersLogsPath\NewAccounts\New_Accounts_$file"
+			  Send-MailMessage -to 'SomeEmail@doesnotexist.com' -from 'SomeEmail@doesnotexist.com' -Body 'New accounts created, see attachment' -Subject "New accounts $file" -SmtpServer 'relay.gstt.nhs.uk' -Attachments "$MainPath\$StartersLogsPath\NewAccounts\New_Accounts_$file"
 			} #end if 
 		
 		# Move file to archive folder
