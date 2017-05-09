@@ -209,16 +209,16 @@ ConvertTo-Html @params | Out-File $PSScriptRoot\BatteryStatus.html
 $to         = 'SomeEmailAddress@email.com','SomeEmailAddress@email.com'
 $bcc        = 'SomeEmailAddress@email.com','SomeEmailAddress@email.com'
 $from       = 'SomeEmailAddress@email.com'
-$subject    = 'Weekly Report - Battery Status Report for BCPC Laptops'
+$subject    = 'Weekly Report - Battery Status Report for WardName Laptops'
 $SMTPServer = "SMTPServer"
-$body       = "Please find attached report on the battery status of the BCPC laptops. <b>Note: This is an automatically generated report and email.</b>"
+$body       = "Please find attached report on the battery status of the WardName laptops. <b>Note: This is an automatically generated report and email.</b>"
 
 $EmailSettings = @{'To'        = $to
-	               'From'      = $from
-	               'Subject'   = $subject   
-	               'SMTPServer'= $SMTPServer
-                 'Body'      = $Body
-                 'bcc'       = $bcc
+	           'From'      = $from
+	           'Subject'   = $subject   
+	           'SMTPServer'= $SMTPServer
+                   'Body'      = $Body
+                   'bcc'       = $bcc
 }
 
 Send-MailMessage @EmailSettings -Attachments $PSScriptRoot\BatteryStatus.html -BodyAsHtml 
